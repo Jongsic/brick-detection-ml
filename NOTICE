@@ -1,0 +1,16 @@
+brick-detection-ml
+Copyright 2026 Jongsic
+
+This project uses NanoDet (https://github.com/RangiLyu/nanodet),
+Copyright 2020-2021 RangiLyu, licensed under the Apache License 2.0.
+patches/nanodet.patch modifies NanoDet source files; configs/ are derived
+from NanoDet's configuration files.
+
+Models trained with this project use data licensed under CC BY 4.0:
+  Boiński, T. M. (2023). Photos and rendered images of LEGO bricks.
+  Scientific Data 10, 811. https://doi.org/10.1038/s41597-023-02682-2
+  - Tagged images with LEGO bricks, https://doi.org/10.34808/anq4-rn44
+  - Tagged images with LEGO bricks part 2, https://doi.org/10.34808/7kk9-tn08
+
+LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize
+or endorse this project.

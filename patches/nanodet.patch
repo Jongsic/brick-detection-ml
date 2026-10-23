@@ -1,0 +1,51 @@
+diff --git a/nanodet/data/collate.py b/nanodet/data/collate.py
+index 3034759..67d9f89 100644
+--- a/nanodet/data/collate.py
++++ b/nanodet/data/collate.py
+@@ -16,7 +16,7 @@ import collections
+ import re
+ 
+ import torch
+-from torch._six import string_classes
++string_classes = str
+ 
+ np_str_obj_array_pattern = re.compile(r"[SaUO]")
+ 
+diff --git a/nanodet/model/head/gfl_head.py b/nanodet/model/head/gfl_head.py
+index 65c457f..60387b8 100644
+--- a/nanodet/model/head/gfl_head.py
++++ b/nanodet/model/head/gfl_head.py
+@@ -63,7 +63,7 @@ class Integral(nn.Module):
+         """
+         shape = x.size()
+         x = F.softmax(x.reshape(*shape[:-1], 4, self.reg_max + 1), dim=-1)
+-        x = F.linear(x, self.project.type_as(x)).reshape(*shape[:-1], 4)
++        x = (x * self.project.type_as(x)).sum(-1).reshape(*shape[:-1], 4)  # 1-D F.linear has no MPS backward
+         return x
+ 
+ 
+diff --git a/tools/train.py b/tools/train.py
+index d8c74b7..af5607b 100644
+--- a/tools/train.py
++++ b/tools/train.py
+@@ -111,7 +111,10 @@ def main(args):
+         if "resume" in cfg.schedule
+         else None
+     )
+-    if cfg.device.gpu_ids == -1:
++    if cfg.device.gpu_ids == "mps":  # Apple Silicon GPU
++        logger.info("Using MPS training")
++        accelerator, devices, strategy, precision = "mps", 1, None, cfg.device.precision
++    elif cfg.device.gpu_ids == -1:
+         logger.info("Using CPU training")
+         accelerator, devices, strategy, precision = (
+             "cpu",
+@@ -127,7 +130,7 @@ def main(args):
+             cfg.device.precision,
+         )
+ 
+-    if devices and len(devices) > 1:
++    if isinstance(devices, (list, tuple)) and len(devices) > 1:
+         strategy = "ddp"
+         env_utils.set_multi_processing(distributed=True)
+ 

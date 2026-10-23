@@ -1,0 +1,26 @@
+# training (NanoDet)
+torch>=2.4
+torchvision
+pytorch-lightning==1.9.5
+torchmetrics<1.0
+setuptools<81
+numpy
+opencv-python
+pycocotools
+omegaconf
+pyaml
+pyyaml
+imagesize
+matplotlib
+tabulate
+tensorboard
+termcolor
+tqdm
+Cython
+
+# data
+Pillow
+
+# export targets
+pnnx
+ncnn
